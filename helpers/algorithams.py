@@ -4,6 +4,8 @@ from queue import PriorityQueue
 from helpers.path_utilities_functions import highlight_path, heuristic
 from collections import deque
 import heapq
+from queue import LifoQueue
+import random
 
 
 def a_star(draw_grid, grid, start, end):
@@ -365,3 +367,84 @@ def bidirectional_search(draw_grid, grid, start, end):
 
     # Return False if the end spot was not reached
     return False
+
+
+def iddfs(draw_grid, grid, start, end, depth_limit):
+    # Initialize a stack for storing the nodes to visit
+    stack = LifoQueue()
+    stack.put((start, 0))
+
+    # Initialize a dictionary to store the path that will be reconstructed at the end
+    path = {}
+
+    # Initialize a set to keep track of the spots that have been visited
+    closed_set = set()
+
+    while not stack.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        # Get the next spot from the stack
+        current, depth = stack.get()
+
+        # Check if the current spot is the end spot
+        if current == end:
+            highlight_path(path, end, draw_grid)
+            end.make_end()
+            return True
+
+        # Mark the current spot as visited
+        closed_set.add(current)
+        current.make_closed()
+
+        # Iterate over the neighbors of the current spot
+        for neighbor in current.neighbors:
+            if neighbor not in closed_set:
+                path[neighbor] = current
+                neighbor.make_open()
+                if depth + 1 <= depth_limit:
+                    stack.put((neighbor, depth + 1))
+
+        # Redraw the grid
+        draw_grid()
+
+    # Return False if the end spot was not reached
+    return False
+
+
+def random_search(draw_grid, grid, start, end, max_iterations):
+    # Initialize current position as start spot
+    current = start
+
+    # Initialize a dictionary to store the path that will be reconstructed at the end
+    path = {current: None}
+
+    # Initialize a variable to keep track of the number of iterations
+    iterations = 0
+
+    while current != end and iterations < max_iterations:
+        # Mark the current spot as closed
+        current.make_closed()
+
+        # Redraw the grid
+        draw_grid()
+
+        # Get a random neighbor from the current spot
+        random_neighbor = random.choice(current.neighbors)
+
+        # Update the current spot and add it to the path dictionary
+        path[random_neighbor] = current
+        current = random_neighbor
+        current.make_open()
+
+        # Increment the number of iterations
+        iterations += 1
+
+    # If the end spot was found, highlight the path from start to end
+    if current == end:
+        highlight_path(path, end, draw_grid)
+        end.make_end()
+        return True
+    else:
+        return False

@@ -1,13 +1,15 @@
 import pygame
 from helpers.path_utilities_functions import create_game_grid, draw_game_window, get_clicked_spot
 from helpers.algorithams import a_star, greedy_search, uniform_cost_search, breadth_first_search, depth_first_search, \
-    bidirectional_search
+    bidirectional_search, iddfs, random_search
 
 screen = pygame.display.set_mode((900, 900))
 
 
 def main(window, grid_width):
     method = 0
+    depth = 0
+    max_iteration = 0
     print("""
 ███████╗██╗███╗   ██╗██████╗     ██████╗  █████╗ ████████╗██╗  ██╗
 ██╔════╝██║████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗╚══██╔══╝██║  ██║
@@ -30,7 +32,9 @@ def main(window, grid_width):
            4. Breath First Search
            5. Depth First Search
            6. Bidirectional Search
-           7. Exit
+           7. Iterative Deepening Depth-First Search
+           8. Random Search
+           9. Exit
            """)
 
         choice = input("\n\n┌─[ " + "PROJECT" + "~" +
@@ -55,6 +59,16 @@ def main(window, grid_width):
             method = 6
             break
         elif choice == "7":
+            print("Please enter the number for depth")
+            depth = input("\n")
+            method = 7
+            break
+        elif choice == "8":
+            method = 8
+            print("Please enter the number of iterations")
+            max_iteration = input("\n")
+            break
+        elif choice == "9":
             print("Bye !")
             exit()
             break
@@ -162,6 +176,14 @@ def main(window, grid_width):
                             bidirectional_search(lambda: draw_game_window(window, game_grid, 100, grid_width),
                                                  game_grid,
                                                  start_pos, end_pos)
+                        elif method == 7:
+                            iddfs(lambda: draw_game_window(window, game_grid, 100, grid_width),
+                                  game_grid,
+                                  start_pos, end_pos, int(depth))
+                        elif method == 8:
+                            random_search(lambda: draw_game_window(window, game_grid, 100, grid_width),
+                                          game_grid,
+                                          start_pos, end_pos, int(max_iteration))
                 # Check if the "c" key was pressed
                 if event.key == pygame.K_c:
                     # Reset start and end positions to None
