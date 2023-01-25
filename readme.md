@@ -31,7 +31,6 @@ Bidirectional search is a graph search algorithm that finds a shortest path from
                                            github.com/muhammadqazi               
 
     
-
 Enter the number from the given options:
 
            1. A* Search
@@ -40,10 +39,12 @@ Enter the number from the given options:
            4. Breath First Search
            5. Depth First Search
            6. Bidirectional Search
-           7. Exit
+           7. Iterative Deepening Depth-First Search
+           8. Random Search
+           9. Exit
            
 
 
 ┌─[ PROJECT~@AI ]
-└──╼ $ 
+└──╼ $  
 ```
